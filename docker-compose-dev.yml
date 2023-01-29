@@ -1,0 +1,53 @@
+version: "3.9"
+services:
+
+  bank:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: container_bank    
+    ports:
+      - "9000:9000"    
+    depends_on:
+      - dbpostgresbank
+    links:
+      - dbpostgresbank
+    volumes:
+      - .:/home/app
+    networks:
+      app_network_bank:
+        aliases:
+          - app_host_bank
+
+  dbpostgresbank:    
+    container_name: container_dbpostgres_bank
+    image: postgres:15.1-alpine   
+    restart: always
+    environment:     
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+   
+    ports: 
+      - "5435:5432"    
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      app_network_bank:
+        aliases:
+          - data_host_bank
+volumes:
+
+  pgdata:
+networks:
+  app_network_bank:
+    name: bankDb
+    driver: bridge
+    ipam:
+      driver: default
+
+
+
+
+  
+    
