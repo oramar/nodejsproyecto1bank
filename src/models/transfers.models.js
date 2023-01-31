@@ -11,33 +11,18 @@ const Transfer = db.define('transfer', {
   amount: {
     type: DataTypes.DECIMAL,
     allowNull: false,
-    defaultValue: 1000
+    defaultValue: 0,
     
   },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  accountNumber: {
+  senderUserId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    unique: true,
   },
-  password: {
-    type: DataTypes.STRING,
+  receiverUserId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
-  },
-  amount: {
-    type: DataTypes.DECIMAL,
-    allowNull: false,
-    defaultValue: 1000
     
-  },
-  status: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: true,
-  },
+  }
 });
 
-module.exports = User;
+module.exports = Transfer;
