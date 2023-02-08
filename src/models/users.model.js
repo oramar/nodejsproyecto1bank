@@ -24,7 +24,7 @@ const User = db.define('user', {
   amount: {
     type: DataTypes.DECIMAL,
     allowNull: false,
-    defaultValue: 1000
+    defaultValue: 0,
     
   },
   status: {

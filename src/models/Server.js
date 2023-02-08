@@ -4,14 +4,16 @@ const morgan = require('morgan');
 const { db } = require('../database/db');
 const globalErrorHandler = require('../controllers/error.controller');
 const AppError = require('../utils/appError');
+const routerUser = require('../routers/users.router');
+const routerTransfer = require('../routers/transfers.router');
 
 class Server {
   constructor() {
     this.app = express();
-    this.port = process.env.PORT || 8000;
+    this.port = process.env.PORT || 9000;
     this.paths = {
-      userPath: '/api/v1/users',
-      transferPath: '/api/v1/transfer',
+      userpath: '/api/v1/users',
+      transferpath: '/api/v1/transfer',
     };
     this.database();
     this.middlewares();
@@ -26,9 +28,12 @@ class Server {
     //UTILIZAMOS EXPRESS.JSON PARA PARSEAR EL BODY DE LA REQUEST
     this.app.use(express.json());
   }
-  database() {}
+
   routes() {
+    //utilizar las rutas de usuarios
     
+    this.app.use(this.paths.userpath, routerUser);
+    this.app.use(this.paths.transferpath, routerTransfer);
 
     this.app.all('*', (req, res, next) => {
       return next(
@@ -37,6 +42,17 @@ class Server {
     });
     this.app.use(globalErrorHandler);
   }
+  
+  database() {
+    db.authenticate()
+      .then(() => console.log('Database authenticated'))
+      .catch(error => console.log(error));
+
+    db.sync()
+      .then(() => console.log('Database synced'))
+      .catch(error => console.log(error));
+  }
+
 
   listen() {
     this.app.listen(this.port, () => {
